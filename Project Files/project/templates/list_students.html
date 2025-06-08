@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Students List{% endblock %}
+{% block extra_css %}
+<style>
+    body {
+        background: #181a1b !important;
+        color: #fff !important;
+    }
+    .container, .card, .table, .form-control, .btn {
+        background: #23272b !important;
+        color: #fff !important;
+        border-color: #343a40 !important;
+    }
+    .btn-success, .btn-primary, .btn-warning, .btn-danger {
+        color: #fff !important;
+        border: none;
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .btn-success:hover { background: #218838 !important; }
+    .btn-primary:hover { background: #0056b3 !important; }
+    .btn-warning:hover { background: #e0a800 !important; color: #23272b !important; }
+    .btn-danger:hover { background: #c82333 !important; }
+    h2, label, th, td, .navbar, .navbar-brand, .nav-link {
+        color: #fff !important;
+    }
+    .navbar, .navbar-light.bg-light {
+        background: #23272b !important;
+        border-bottom: 1px solid #343a40;
+    }
+    .form-control::placeholder {
+        color: #bbb !important;
+    }
+    .action-btns {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+    }
+    .table thead th {
+        background: #181a1b !important;
+        border-bottom: 2px solid #343a40;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background: #23272b !important;
+    }
+    .table-striped tbody tr:nth-of-type(even) {
+        background: #202225 !important;
+    }
+    #download-pdf {
+        background: #007bff;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        border-radius: 5px;
+        padding: 8px 18px;
+        transition: background 0.2s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    #download-pdf:hover {
+        background: #28a745 !important;
+        color: #fff !important;
+    }
+    @media (max-width: 768px) {
+        .container, .table-responsive {
+            padding: 0 2px !important;
+        }
+        .table thead {
+            display: none;
+        }
+        .table, .table tbody, .table tr, .table td {
+            display: block;
+            width: 100%;
+        }
+        .table tr {
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #343a40;
+        }
+        .table td {
+            text-align: right;
+            padding-left: 50%;
+            position: relative;
+        }
+        .table td:before {
+            content: attr(data-label);
+            position: absolute;
+            left: 0;
+            width: 50%;
+            padding-left: 15px;
+            font-weight: bold;
+            text-align: left;
+            color: #bbb;
+        }
+        .action-btns {
+            justify-content: flex-end;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+    <h2>Students List</h2>
+    <button id="download-pdf" class="btn">Download as PDF</button>
+</div>
+<div class="table-responsive">
+<table class="table table-dark table-striped" id="students-table">
+    <thead>
+        <tr>
+            <th>Student ID</th>
+            <th>Name</th>
+            <th>CGPA</th>
+            <th>Report</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for student in students|dictsort:"student_id" %}
+        <tr>
+            <td>{{ student.student_id }}</td>
+            <td>{{ student.name }}</td>
+            <td>{{ student.cgpa }}</td>
+            <td>
+                {% if student.cgpa >= 9.0 %}
+                    Excellent
+                {% elif student.cgpa >= 7.1 %}
+                    Good
+                {% elif student.cgpa >= 6.0 %}
+                    Aver
+                {% elif student.cgpa >= 4.0 %}
+                    Needs Improvement
+                {% else %}
+                    Fail
+                {% endif %}
+            </td>
+            <td class="action-btns">
+                <a href="{% url 'edit_student' student.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <form method="POST" action="{% url 'delete_student' student.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+document.getElementById('download-pdf').addEventListener('click', function() {
+    // Gather table data (excluding Actions column)
+    const table = document.getElementById('students-table');
+    const headers = Array.from(table.querySelectorAll('th')).slice(0, -1).map(th => th.innerText);
+    const rows = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+        Array.from(tr.querySelectorAll('td')).slice(0, -1).map(td => td.innerText)
+    );
+    // Create PDF
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    let y = 20;
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(18);
+    pdf.text('STUDENT REPORT', pageWidth / 2, y, { align: 'center' });
+    y += 10;
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(14);
+    pdf.text('Year: ' + new Date().getFullYear(), pageWidth / 2, y, { align: 'center' });
+    y += 15;
+    // Table headers
+    pdf.setFont('helvetica', 'bold');
+    pdf.setFontSize(13);
+    let x = 15;
+    const colWidths = [40, 50, 25, 40];
+    headers.forEach((header, i) => {
+        pdf.setTextColor(0,0,0);
+        pdf.rect(x, y - 7, colWidths[i], 10, 'S');
+        pdf.text(header, x + 2, y);
+        x += colWidths[i];
+    });
+    y += 10;
+    // Table rows
+    pdf.setFont('helvetica', 'normal');
+    pdf.setFontSize(12);
+    rows.forEach(row => {
+        x = 15;
+        row.forEach((cell, i) => {
+            pdf.setTextColor(0,0,0);
+            pdf.rect(x, y - 7, colWidths[i], 10, 'S');
+            pdf.text(cell, x + 2, y);
+            x += colWidths[i];
+        });
+        y += 10;
+        if (y > 280) {
+            pdf.addPage();
+            y = 20;
+        }
+    });
+    const year = new Date().getFullYear();
+    pdf.save(`STUDENT_REPORT (${year}).pdf`);
+});
+</script>
+{% endblock %}

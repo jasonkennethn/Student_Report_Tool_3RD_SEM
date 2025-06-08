@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% block title %}Delete Student{% endblock %}
+{% block content %}
+<h2>Delete Student</h2>
+<p>Are you sure you want to delete {{ student.name }}?</p>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'list_students' %}" class="btn btn-secondary ml-2">Cancel</a>
+</form>
+{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Delete Student</title>
+    <style>
+    /* General body styling */
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: #f4f7fa;
+        color: #333333;
+        margin-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    /* Container: light shadow and padding */
+    .container {
+        background: #ffffff;
+        padding: 25px 30px;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    /* Headings styling */
+    h2 {
+        margin-bottom: 25px;
+        color: #2c3e50;
+        font-weight: 700;
+        border-bottom: 2px solid #3498db;
+        padding-bottom: 8px;
+    }
+
+    /* Buttons styling */
+    .btn {
+        font-weight: 600;
+        padding: 10px 18px;
+        border-radius: 5px;
+        box-shadow: 0 3px 7px rgba(52, 152, 219, 0.3);
+        transition: all 0.3s ease;
+    }
+    .btn-primary, .btn-info {
+        background-color: #3498db;
+        border-color: #2980b9;
+    }
+    .btn-primary:hover, .btn-info:hover {
+        background-color: #2980b9;
+        border-color: #1f6690;
+        box-shadow: 0 5px 10px rgba(41, 128, 185, 0.45);
+    }
+    .btn-success {
+        background-color: #27ae60;
+        border-color: #1e8449;
+    }
+    .btn-success:hover {
+        background-color: #1e8449;
+        border-color: #145a32;
+        box-shadow: 0 5px 10px rgba(30, 132, 73, 0.45);
+    }
+    .btn-warning {
+        background-color: #f39c12;
+        border-color: #d68910;
+        color: #fff;
+    }
+    .btn-warning:hover {
+        background-color: #d68910;
+        border-color: #b9770e;
+        color: #fff;
+        box-shadow: 0 5px 10px rgba(214, 137, 16, 0.45);
+    }
+    .btn-danger {
+        background-color: #e74c3c;
+        border-color: #c0392b;
+    }
+    .btn-danger:hover {
+        background-color: #c0392b;
+        border-color: #992d22;
+        box-shadow: 0 5px 10px rgba(192, 57, 43, 0.45);
+    }
+    .btn-secondary {
+        background-color: #95a5a6;
+        border-color: #7f8c8d;
+        color: #fff;
+    }
+    .btn-secondary:hover {
+        background-color: #7f8c8d;
+        border-color: #707b7c;
+        color: #fff;
+    }
+    /* Add margin to buttons for spacing */
+    .btn + .btn, .btn + a.btn {
+        margin-left: 10px;
+    }
+
+    /* Form label styling */
+    label {
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 6px;
+        display: block;
+    }
+
+    /* Input fields styling */
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    input[type="float"],
+    select,
+    textarea {
+        border-radius: 5px;
+        border: 1.5px solid #bdc3c7;
+        padding: 10px 12px;
+        transition: border-color 0.3s ease;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="number"]:focus,
+    input[type="float"]:focus,
+    select:focus,
+    textarea:focus {
+        border-color: #3498db;
+        outline: none;
+        box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* Table styling */
+    table {
+        border-collapse: separate;
+        border-spacing: 0 10px;
+        width: 100%;
+    }
+    th, td {
+        text-align: left;
+        padding: 14px 15px;
+        background-color: #ffffff;
+        border: none;
+        vertical-align: middle;
+    }
+    th {
+        background-color: #3498db;
+        color: white;
+        font-weight: 600;
+        border-radius: 6px;
+    }
+    tbody tr:hover {
+        background-color: #ecf0f1;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+    }
+
+    /* Success and error messages styling */
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 5px;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+    .alert-error, .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        padding: 12px 20px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    }
+
+</style>
+
+
+</head>
+</html>

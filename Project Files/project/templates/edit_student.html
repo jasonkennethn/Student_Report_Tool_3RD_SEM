@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Edit Student{% endblock %}
+{% block extra_css %}
+<style>
+    body {
+        background: #181a1b !important;
+        color: #fff !important;
+    }
+    .container, .card, .form-control, .btn {
+        background: #23272b !important;
+        color: #fff !important;
+        border-color: #343a40 !important;
+    }
+    .btn-success, .btn-primary, .btn-warning, .btn-danger {
+        color: #fff !important;
+    }
+    h2, label, th, td, .navbar, .navbar-brand, .nav-link {
+        color: #fff !important;
+    }
+    .navbar, .navbar-light.bg-light {
+        background: #23272b !important;
+        border-bottom: 1px solid #343a40;
+    }
+    .form-control::placeholder {
+        color: #bbb !important;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Edit Student</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="student_id">Student ID</label>
+            <input type="text" class="form-control" id="student_id" name="student_id" required maxlength="20" value="{{ student.student_id }}">
+        </div>
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required maxlength="100" value="{{ student.name }}">
+        </div>
+        <div class="form-group">
+            <label for="cgpa">CGPA</label>
+            <input type="number" step="0.01" class="form-control" id="cgpa" name="cgpa" required min="0" max="10" value="{{ student.cgpa }}">
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
+</div>
+{% endblock %}
