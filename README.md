@@ -1,1 +1,2 @@
-# WEB_DEVELOPMENT_2025_3RD_SEM
+# Student_Report_Tool_3RD_SEM
+This Project is developed using Django, Bootstrap, HTML5/CSS3, JavaScript, SQLite, Git
